@@ -47,6 +47,10 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
 //letter is changed. 
 // That is the purpose of is_adjacent(last_word, word
 bool is_adjacent(const string& word1, const string& word2) {
+    if (word1 == word2) {
+        return true;
+    }
+
     int len1 = word1.length();
     int len2 = word2.length();
 
@@ -69,10 +73,10 @@ bool is_adjacent(const string& word1, const string& word2) {
             } else if (len2 > len1) {
                 j++;
             } else {
-                i++; j++; 
+                i++; j++;
             }
         } else {
-            i++; j++; 
+            i++; j++;
         }
     }
 
@@ -86,7 +90,7 @@ bool is_adjacent(const string& word1, const string& word2) {
 
 vector<string> generate_word_ladder(const string& begin_word, const string& end_word, const set<string>& word_list) {
     if (begin_word == end_word) {
-        return {begin_word};
+        return {};
     }
 
     queue<vector<string>> ladder_queue;
