@@ -47,39 +47,47 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
 //letter is changed. 
 // That is the purpose of is_adjacent(last_word, word
 bool is_adjacent(const string& word1, const string& word2) {
-    // eliminate case more than one letter is added/deleted
     int len1 = word1.length();
     int len2 = word2.length();
-    if (abs(len1 - len2) > 1) return false;
 
-    int changes = 0;
+    if (abs(len1 - len2) > 1) {
+        return false;
+    }
+
+    int edits = 0;
     int i = 0, j = 0;
 
     while (i < len1 && j < len2) {
         if (word1[i] != word2[j]) {
-            if (++changes > 1) 
-                return false;
+            edits++;
+            if (edits > 1) {
+                return false; 
+            }
 
-            if (len1 > len2) 
-                i++;
-
-            else if (len2 > len1) 
+            if (len1 > len2) {
+                i++; /
+            } else if (len2 > len1) {
                 j++;
-
-            else 
-                i++;
-                j++;
+            } else {
+                i++; j++; 
+            }
         } else {
-            i++;
-            j++;
+            i++; j++; 
         }
     }
-    return true;
+
+    if (i < len1 || j < len2) {
+        edits++;
+    }
+
+    return edits == 1;
 }
 
 
 vector<string> generate_word_ladder(const string& begin_word, const string& end_word, const set<string>& word_list) {
-    if (begin_word == end_word) return {begin_word};
+    if (begin_word == end_word) {
+        return {begin_word};
+    }
 
     queue<vector<string>> ladder_queue;
     ladder_queue.push({begin_word});
