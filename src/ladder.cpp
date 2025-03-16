@@ -1,4 +1,6 @@
 #include "ladder.h"
+#include <algorithm>
+#include <unordered_set>
 using namespace std;
 
 void error(string msg) {
@@ -6,7 +8,36 @@ void error(string msg) {
 }
 
 bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
-    
+    int len1 = str1.length();
+    int len2 = str2.length();
+
+    if (abs(len1 - len2) > d) {
+        return false;
+    }
+
+    vector<vector<int>> dp(len1 + 1, vector<int>(len2 + 1, 0));
+
+    for (int i = 0; i <= len1; i++) {
+        dp[i][0] = i; 
+    }
+    for (int j = 0; j <= len2; j++) {
+        dp[0][j] = j; // Cost of inserting all characters in str2 to match empty str1
+    }
+
+    for (int i = 1; i <= len1; i++) {
+        for (int j = 1; j <= len2; j++) {
+            if (str1[i - 1] == str2[j - 1]) {
+
+                dp[i][j] = dp[i - 1][j - 1];
+
+            } else {
+                dp[i][j] = 1 + min({dp[i - 1][j],
+                                    dp[i][j - 1],
+                                    dp[i - 1][j - 1]});
+            }
+        }
+    }
+    return dp[len1][len2] <= d;
 }
 
 
@@ -48,13 +79,16 @@ bool is_adjacent(const string& word1, const string& word2) {
 
 
 vector<string> generate_word_ladder(const string& begin_word, const string& end_word, const set<string>& word_list) {
-    queue<vector<string>> ladder_queue; // queue of vector of strings
-    ladder_queue.push({begin_word})
+    if (begin_word == end_word) return {begin_word};
+
+    queue<vector<string>> ladder_queue;
+    ladder_queue.push({begin_word});
+
     unordered_set<string> visited;
     visited.insert(begin_word);
 
     while (!ladder_queue.empty()) {
-        string ladder = ladder_queue.front();
+        auto ladder = ladder_queue.front();
         ladder_queue.pop();
         string last_word = ladder.back();
 
