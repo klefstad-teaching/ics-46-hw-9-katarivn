@@ -65,7 +65,7 @@ bool is_adjacent(const string& word1, const string& word2) {
             }
 
             if (len1 > len2) {
-                i++; /
+                i++;
             } else if (len2 > len1) {
                 j++;
             } else {
